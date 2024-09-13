@@ -1,0 +1,42 @@
+.outer-content-container {
+    flex-basis: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+}
+
+/* Brede inner container*/
+.inner-content-container {
+    flex-basis: 1400px;
+    flex-shrink: 1;
+    flex-grow: 0;
+    align-items: center;
+}
+
+/* Smalle inner container voor tekst etc. */
+.inner-content-container__text-restriction {
+    flex-basis: 1000px;
+    flex-shrink: 1;
+    flex-grow: 0;
+    align-items: flex-start;
+
+}
+
+.inner-content-container,
+.inner-content-container__text-restriction {
+    margin: 0 25px;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.article1,
+.article2,
+.article3 {
+    padding: 20px 0;
+}
+
+.header {
+    padding: 15px 0;
+}
