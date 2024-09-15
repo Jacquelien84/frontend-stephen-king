@@ -1,4 +1,4 @@
-import './styles/Global.css';
+import './App.css';
 import {Route, Routes } from 'react-router-dom';
 import Navigation from "./components/navigation/Navigation.jsx";
 import Home from "./pages/homePage/Home.jsx";
@@ -15,7 +15,7 @@ function App() {
             <main>
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/boeken" element={<Book />} />
+                    <Route path="/book" element={<Book />} />
                     <Route path="/contact" element={<Contact />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/login" element={<Login />} />

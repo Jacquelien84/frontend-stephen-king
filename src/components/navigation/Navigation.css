@@ -1,16 +1,16 @@
 .main-navigation {
-    background-color: var(--color-secondary);
+    background-color: #000000;
     padding: 16px 0;
 }
 
 .main-navigation a,
 .main-navigation a:visited {
-    color: orangered;
+    color: white;
     font-weight: 600;
 }
 
 .main-navigation a:hover {
-    color: var(--color-primary);
+    color: #8B0000;
 }
 
 .inner-nav-container {
@@ -28,7 +28,7 @@
 
 .main-navigation-links {
     list-style: none;
-    flex-basis: 500px;
+    flex-basis: 350px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -36,5 +36,5 @@
 
 .img {
     height: 200px;
-    width: auto;
+    width: 500px;
 }
