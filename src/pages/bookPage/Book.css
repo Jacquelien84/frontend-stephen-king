@@ -1,0 +1,33 @@
+table, td, th {
+    border: 1px solid #8B0000;
+}
+
+th {
+    background-color: #000000;
+    color: white;
+    text-align: left;
+}
+
+td, th {
+    padding: 8px;
+}
+
+td > img {
+    width: 60px;
+    border-radius: 50%;
+}
+
+table {
+    border-collapse: collapse;
+    width: 90%;
+    margin: 20px 0;
+}
+.download-container{
+    display: flex;
+    justify-content: center;
+}
+
+.image-container{
+    width: 100vw;
+    height: 100vh;
+}

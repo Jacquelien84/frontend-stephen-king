@@ -25,7 +25,7 @@ function Login() {
         toggleError(false);
 
         try {
-            const result = await axios.post('http://localhost:3000/login', {
+            const result = await axios.post('/users/login', {
                 email: username,
                 password: password,
             },{
