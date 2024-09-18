@@ -1,0 +1,31 @@
+
+.searchDropdown {
+    position: relative;
+    width: 200px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid var(--border-color-green);
+    border-radius: var(--border-rad-xs);
+    appearance: none;
+    background-color: #fff;
+}
+
+.searchDropdown option {
+    background-color: #fff;
+    color: var(--clr-grey-50);
+}
+
+.searchDropdown:focus {
+    outline: none;
+    border-color: var(--clr-secondary-orange);
+}
+
+.searchDropdown:hover {
+    border-color: var(--clr-secondary-orange);
+}
+
+.option {
+    width: 100px;
+    background-color: #BE8E66;
+
+}

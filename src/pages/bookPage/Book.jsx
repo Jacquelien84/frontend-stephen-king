@@ -1,129 +1,159 @@
 import './Book.css';
-import {useEffect, useState} from "react";
+import React, { useState, useEffect } from 'react';
 import axios from "axios";
 
-function GetRequestPage() {
+const Book = () => {
     const [books, setBooks] = useState([]);
-    const [imageData, setImageData] = useState('');
     const [loading, setLoading] = useState(false);
+    const [loadingImage, setLoadingImage] = useState(false);
+    const [searchValue, setSearchValue] = useState("");
+    const [sortBy, setSortBy] = useState("title");
+    const [sortOrder, setSortOrder] = useState("asc");
+    const [selectedBook, setSelectedBook] = useState(null);
+    const [imageData, setImageData] = useState('');
     const [error, setError] = useState(null);
 
+    // Haal boeken op bij het laden van de component
     useEffect(() => {
-        void fetchBooks()
-    }, []);
+        fetchBooks();
+    }, [sortBy, sortOrder]);
 
-    async function fetchData(id, path) {
-        setError(null);
-
+    // Functie om een specifiek boek op te halen en weer te geven in de modal
+    const fetchBookDetails = async (bookId) => {
+        setLoading(true);
         try {
-            setLoading(true);
-            const download = await axios.get(`http://localhost:8080/books/${id}/${path}`, {
+            const response = await axios.get(`http://localhost:8080/books/${bookId}`);
+            setSelectedBook(response.data);
+        } catch (error) {
+            console.error("Error fetching book details:", error);
+            setError(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Functie om afbeeldingen op te halen
+    async function fetchBookcover(id) {
+        setError(null);
+        try {
+            setLoadingImage(true);
+            const download = await axios.get(`http://localhost:8080/books/${books.id}/bookcovers`, {
                 responseType: 'arraybuffer'
             });
-            const blob = new Blob([download.data], {type: 'image/png'});
+            console.log("download", download);
+            const blob = new Blob([download.data], { type: 'image/jpg' });
             const dataUrl = URL.createObjectURL(blob);
             setImageData(dataUrl);
         } catch (e) {
             setError(e);
         } finally {
+            setLoadingImage(false);
+        }
+    }
+
+    // Functie om boeken op te halen
+    const fetchBooks = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.get(`http://localhost:8080/books?sortBy=${sortBy}&sortOrder=${sortOrder}`);
+            setBooks(Array.isArray(response.data) ? response.data : []);
+            console.log(response.data);
+        } catch (error) {
+            console.error("Error fetching books:", error);
+            setError(error);
+            setBooks([]);
+        } finally {
             setLoading(false);
         }
-    }
+    };
 
-    async function fetchBooks() {
-        try {
-            const response = await axios.get('http://localhost:8080/books');
-            // Plaats alle studenten in de state zodat we het op de pagina kunnen gebruiken
-            setBooks(response.data);
-            console.log(response.data);
-        } catch (e) {
-            console.error(e);
+    // Functie om op boeknaam te zoeken
+    const fetchBookByName = async (title) => {
+        if (!title.trim()) {
+            setError("Please enter a valid search term");
+            return;
         }
-    }
 
-    async function deleteBook(id) {
+        setLoading(true);
+        setError(null); // Reset error state before making the request
         try {
-            await axios.delete(`http://localhost:8080/books/${id}`)
-            window.alert('Book successfully deleted!');
-            // haal de studenten nu opnieuw op, zodat de gebruiker ziet dat de entry verwijderd is
-            // deze is overbodig, hij wordt bovenaan aangeroepen(zie demo)
-            void fetchBooks();
-        } catch (e) {
-            console.error(e)
+            const response = await axios.get(`books/title=${books.title}`);
+            setBooks(Array.isArray(response.data) ? response.data : []);
+
+            if (response.data.length === 0) {
+                setError("No books found for the search term");
+            }
+        } catch (error) {
+            console.error("Error fetching books by name:", error);
+            setError("An error occurred while fetching the books.");
+        } finally {
+            setLoading(false);
         }
-    }
+    };
+
 
     return (
-        <div className="page-container">
-            <h1>Alle boeken van Stephen King</h1>
-            <table>
-                <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Foto</th>
-                    <th>Title</th>
-                    <th>Author</th>
-                    <th>Originele title</th>
-                    <th>Released</th>
-                    <th>Verfilmd</th>
-                    <th>Beschrijving</th>
-                </tr>
-                </thead>
-                <tbody>
-                {books.map((book) => {
-                    // De key moet op het buitenste element staan en uniek zijn
-                    return <tr key={book.id}>
-                        <td>{book.id}</td>
-                        {/*Even checken of er uberhaupt een file is, en zo ja, dan laten we hem zien!*/}
-                        <td>{book.studentPhoto && <img src={`http://localhost:8080/books/${book.id}/photo`}
-                                                       alt={book.name}
-                                                       onClick={() => fetchData(book.id, 'photo')}/>
-                        }
-                        </td>
-                        <td><strong>{book.title[0].toUpperCase() + book.title.slice(1)}</strong></td>
-                        <td>{book.author}</td>
-                        <td>{book.originalTitle}</td>
-                        <td>{book.released}</td>
-                        <td>{book.movieAdaptation}</td>
-                        <td>{book.description}</td>
+        <div className="book-list-container">
+            {/* Zoekbalk en sorteeropties */}
+            <div className="search-sort-controls">
+                <input
+                    type="text"
+                    placeholder="Search..."
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                />
+                <button onClick={() => fetchBookByName(searchValue)}>Search</button>
 
-                    </tr>
-                })}
-                </tbody>
-            </table>
+                <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+                    <option value="title">Alphabetically</option>
+                    <option value="released">Publication Year</option>
+                </select>
+                <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
+                    <option value="asc">Ascending</option>
+                    <option value="desc">Descending</option>
+                </select>
+                <button onClick={fetchBooks}>Reset</button>
+            </div>
+
+            {/* Boekenlijst */}
+            <div className="books-grid">
+                {loading ? (
+                    <div>Loading...</div>
+                ) : books.length > 0 ? (
+                    books.map((book) => (
+                        <div key={book.id} className="book-card" onClick={() => fetchBookDetails(book.id)}>
+                            <h3>{book.title}</h3>
+                            <img src={`http://localhost:8080/books/${book.id}/bookcovers`} alt={book.title} />
+                        </div>
+                    ))
+                ) : (
+                    <div>No books found.</div>
+                )}
+            </div>
+
+            {/* Boekdetail Modal */}
+            {selectedBook && (
+                <div className="modal-overlay" onClick={() => setSelectedBook(null)}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <h2>{selectedBook.title}</h2>
+                        <p><strong>Schrijver:</strong> {selectedBook.author}</p>
+                        <p><strong>Originele Title:</strong> {selectedBook.originalTitle}</p>
+                        <p><strong>Released:</strong> {selectedBook.released}</p>
+                        <p><strong>Verfilmd:</strong> {selectedBook.movieAdaptation}</p>
+                        <p><strong>Beschrijving:</strong> {selectedBook.description}</p>
+                        <button onClick={() => setSelectedBook(null)}>Close</button>
+                    </div>
+                </div>
+            )}
+
             <div className="download-container">
-                {loading ? <p>Loading...</p> : imageData &&
-                    <img className='image-container' src={imageData} alt="blob"/>}
-                {error && <p className="error-message">Something went wrong!</p>}
+                {loadingImage ? <p>Loading image...</p> : imageData &&
+                    <img className='image-container' src={imageData} alt="blob" />}
+                {error && <p className="error-message">Something went wrong: {error.message}</p>}
             </div>
         </div>
     );
-}
+};
 
-export default GetRequestPage;
-
-
-
-
-            {/*<section className="book-detail-section outer-content-container">*/}
-            {/*    <div className="inner-content-container">*/}
-            {/*        <Button type="button" onClick={fetchBooks} variant="primary">Haal de beschrijving van het boek op.</Button>*/}
-            {/*        {Object.keys(book).length > 0 && (<>*/}
-            {/*        <h1>{book.id}</h1>*/}
-            {/*        <h2>{book.title}</h2>*/}
-            {/*        <p className="book-detail-author">Geschreven door<em>{book.author}</em> op {formatDataString(book.reviews)}</p>*/}
-            {/*        <span className="post-detail-read-time">*/}
-            {/*            <Clock color="#50535C" size={18}/>*/}
-            {/*            <p> {book.readTime} minuten lezen</p>*/}
-            {/*        </span>*/}
-            {/*        <p>{book.description}</p>*/}
-            {/*        <p>{book.comment} reacties - {book.likes} keer geliked</p>*/}
-            {/*        </>)}*/}
-            {/*        {error && <p>Er is iets misgegaan bij het ophalen van de data. Probeer jet opnieuw.</p>}*/}
-            {/*        <Link to="/books" className="back-link">*/}
-            {/*            <CaretLeft color="#38E991" size={22}/>*/}
-            {/*            <p>Terug naar de overzichtspagina</p>*/}
-            {/*        </Link>*/}
-            {/*    </div>*/}
-            {/*</section>*/}
+export default Book;
 
