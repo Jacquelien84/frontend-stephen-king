@@ -31,7 +31,7 @@ function AuthContextProvider( { children } ) {
                 status: 'done',
             } );
         }
-    }, [fetchUserData] );
+    }, [] );
 
     const login = ( JWT ) => {
         // zet de token in de Local Storage
@@ -59,7 +59,7 @@ function AuthContextProvider( { children } ) {
     async function fetchUserData( id, token, redirectUrl ) {
         try {
             // haal gebruikersdata op met de token en id van de gebruiker
-            const result = await axios.get( `http://localhost:3000/600/users/${ id }`, {
+            const result = await axios.get( `http://localhost:8080/users/${ id }`, {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${ token }`,
