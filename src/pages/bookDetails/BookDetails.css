@@ -1,0 +1,58 @@
+.inner-content-container {
+    flex-basis: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.img-book {
+    display: flex;
+    flex-direction: row; /* Zorg ervoor dat items naast elkaar staan */
+    justify-content: center;
+    align-items: center; /* Zorg dat ze verticaal gecentreerd zijn */
+    padding: 20px;
+}
+
+.img-book img {
+    height: 350px;
+    flex-shrink: 0; /* Voorkom dat de afbeelding krimpt */
+}
+
+.text-book {
+    flex-basis: 50%;
+    padding: 25px;
+}
+
+.faved-icon {
+    fill: var(--darkpurple);
+    font-size: 25px;
+    stroke: var(--darkpurple);
+    stroke-width: 40px;
+}
+
+.faved-icon:hover {
+    transition: font-size 0.2s, fill 0.2s, margin 0.2s;
+}
+
+.faved-icon:active {
+    font-size: 15px;
+    margin: 5px;
+}
+
+.fav-icon {
+    font-size: 25px;
+    fill: none;
+    stroke: var(--darkpurple);
+    stroke-width: 40px;
+}
+
+.fav-icon:hover {
+    fill: #cbb3d3;
+    transition: font-size 0.2s, fill 0.2s, margin 0.2s;
+}
+
+.fav-icon:active {
+    fill: var(--darkpurple);
+    font-size: 15px;
+    margin: 5px;
+}

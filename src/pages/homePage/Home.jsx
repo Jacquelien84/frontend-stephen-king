@@ -1,26 +1,30 @@
 import './Home.css';
+import quote from '../../assets/Stephen_King_The_Shining_Quote.jpg'
+import stephenking from '../../assets/stephenking.jpg'
 
 
 function Home() {
 
     return (
         <>
-            <header className="header outer-content-container">
-                <div className="inner-content-container">
-                    <h3>Stephen Edwin King (Portland, Maine, 21 september 1947) is een Amerikaans schrijver van onder
-                        meer horror- en sciencefictionverhalen en thrillers. Zijn boeken komen voor op lijsten van
-                        bestverkochte boeken, zowel van fictie als non-fictie. De verhalen van King gaan vaak over
-                        onopvallende personages die worden ondergedompeld in toenemend beangstigende situaties. Hij
-                        schrijft ook meer literair werk, zoals The Body, later verfilmd als Stand by me, maar ook Rita
-                        Hayworth and Shawshank Redemption en The Green Mile, later bekend geworden als films onder de
-                        titels The Shawshank Redemption en The Green Mile. Ook The Stand werd na de uitgave van de
-                        onverkorte versie verfilmd tot een miniserie (met Gary Sinise en Molly Ringwald in de
-                        hoofdrollen).</h3>
-                </div>
-            </header>
-
             <section className="section outer-content-container">
                 <div className="inner-content-container">
+                    <div className="header-text">
+                        <img className="stephenking" src={stephenking} alt="Foto van Stepehen King"/>
+                        <h3>Stephen Edwin King (Portland, Maine, 21 september 1947) is een Amerikaans schrijver van
+                            onder
+                            meer horror- en sciencefictionverhalen en thrillers. Zijn boeken komen voor op lijsten van
+                            bestverkochte boeken, zowel van fictie als non-fictie. De verhalen van King gaan vaak over
+                            onopvallende personages die worden ondergedompeld in toenemend beangstigende situaties. Hij
+                            schrijft ook meer literair werk, zoals The Body, later verfilmd als Stand by me, maar ook
+                            Rita
+                            Hayworth and Shawshank Redemption en The Green Mile, later bekend geworden als films onder
+                            de
+                            titels The Shawshank Redemption en The Green Mile. Ook The Stand werd na de uitgave van de
+                            onverkorte versie verfilmd tot een miniserie (met Gary Sinise en Molly Ringwald in de
+                            hoofdrollen).</h3>
+                    </div>
+
                     <article className="article1">
                         <h4>Biografie</h4>
                         <hr/>
@@ -70,6 +74,8 @@ function Home() {
                             schrijvers, gevolgd door personages die gemakkelijk een tweede huis kunnen betalen.
                             Dit heeft geen gevolgen gehad voor zijn populariteit.</p>
                     </article>
+
+                    <img className="quote" src={quote} alt="Quote van Stepehen King"/>
 
                     <article className="article2">
                         <h4>Auto-Ongeluk</h4>

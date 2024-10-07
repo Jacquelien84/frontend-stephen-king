@@ -1,1 +1,139 @@
+.register-content {
+    width: 60%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 60px;
+    margin: 100px auto;
+    box-shadow: rgba(139, 0, 0, 0.5) 0 7px 29px 0;
+    border-radius: 25px 0 25px 0;
+}
 
+.info-text h1 {
+    font-weight: bolder;
+    font-size: 30px;
+}
+
+.info-text h5 {
+    font-style: italic;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    padding: 15px;
+    color: var(--lightpurple);
+}
+
+.container-column {
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+}
+
+label {
+    padding: 10px;
+}
+
+.radio-container, .input-container {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    margin: 10px 10px 10px;
+}
+
+.input-container {
+    margin-bottom: 30px;
+
+}
+
+.radio-container {
+    flex-direction: row;
+}
+
+[type = radio] {
+    opacity: 0;
+}
+
+.input-block {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.input-block-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    vertical-align: middle;
+}
+
+em {
+    font-size: 10px;
+    margin: -5px;
+    width: 200px;
+}
+
+p {
+    width: 100%;
+}
+
+.input-container p {
+    transform: translateY(20%);
+}
+
+.radio-symbol {
+    width: 100px;
+    font-size: 30px;
+    padding: 5px;
+}
+
+.status  {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+}
+
+.off {
+    color: lightgrey;
+    border: 2px solid lightgrey;
+    padding: 10px;
+    border-radius: 10px;
+}
+.on {
+    color: var(--darkpurple);
+    background-color: var(--yellow);
+    border: 2px solid var(--yellow);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+p {
+    font-weight: bold;
+}
+
+.successfully-added {
+    color: var(--darkpurple);
+}
+
+.user-added-icon {
+    font-size: 50px;
+}

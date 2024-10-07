@@ -1,6 +1,7 @@
+// Functions
 import React from "react";
 
-function InputElement({type, name, label, id, placeholder, onChange}) {
+function InputHookForm({type, name, label, id, placeholder, errors, register, validationRules}) {
     return (
         <>
             <label htmlFor={id}>
@@ -9,12 +10,11 @@ function InputElement({type, name, label, id, placeholder, onChange}) {
                     type={type}
                     id={id}
                     placeholder={placeholder}
-                    name={name}
-                    onChange={onChange}
+                    {...register(name, validationRules)}
                 />
             </label>
+            <p className="input-error-message">{errors}</p>
         </>
     );
 }
-
-export default InputElement;
+export default InputHookForm;

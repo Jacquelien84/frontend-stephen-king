@@ -13,12 +13,12 @@ body {
 a:active,
 a:visited,
 a {
-    color: white;
+    color: black;
 }
 
 nav {
     background-color: darkslategrey;
-    color: white;
+    color: black;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
