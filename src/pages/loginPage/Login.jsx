@@ -1,86 +1,78 @@
 import './Login.css';
-import {Link} from "react-router-dom";
-import {useContext, useEffect, useState} from "react";
-import Input from '../../components/input/Input.jsx';
+import {Link, useNavigate} from "react-router-dom";
+import React, {useContext, useEffect, useState} from "react";
 import axios from "axios";
-import {AuthContext} from "../../context/AuthContext.jsx";
+import { AuthContext } from "../../context/AuthContext.jsx";
+import Button from "../../components/button/Button.jsx";
 
 function Login() {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
     const [error, toggleError] = useState(false);
-    const { login } = useContext(AuthContext);
+    const [password, setPassword] = React.useState("");
+    const [username, setUsername] = React.useState("");
+    const { login, loggedIn } = useContext(AuthContext);
+    const navigate = useNavigate();
 
-    const source = axios.CancelToken.source();
+    useEffect(() => {
+        if (loggedIn) {
+            navigate("/profile");
+        }
+    }, [loggedIn, navigate]);
 
-    // // mocht onze pagina ge-unmount worden voor we klaar zijn met data ophalen, aborten we het request
-    // useEffect(() => {
-    //     return function cleanup() {
-    //         source.cancel();
-    //     }
-    // }, []);
 
-    async function handleSubmit(e) {
+    function handleChangeUsername(value) {
+        toggleError(false);
+        setUsername(value);
+    }
+
+    async function logIn(e) {
         e.preventDefault();
         toggleError(false);
 
         try {
-            const result = await axios.post('/users/login', {
-                email: username,
+            const result = await axios.post(`http://localhost:8080/login`, {
+                username: username,
                 password: password,
-            },{
-                cancelToken: source.token,
             });
-            // log het resultaat in de console
+
             console.log(result.data);
-
-            // geef de JWT token aan de login-functie van de context mee
-            login(result.data.accessToken);
-
+            localStorage.setItem("token", result.data.access_token);
+            let token = result.data.access_token;
+            login(token);
         } catch(e) {
-            console.error(e);
+            console.log(e.response);
             toggleError(true);
         }
     }
 
-
     return (
         <>
-            <section>
-                <div className="login outer-content-container">
+            <section className="login-content">
                     <div className="inner-content-container">
                         <h1>Login</h1>
-                        <form onSubmit={handleSubmit}>
-                            {error && <div className="error-message">{error}</div>}
+                        {!(loggedIn) &&
+                            <form onSubmit={logIn}>
+                                <label htmlFor="username"><p>Username:</p>
+                                    <input type="text" id="username" value={username}
+                                           onChange={(e) => {handleChangeUsername(e.target.value)}}></input>
+                                </label>
+                                <label htmlFor="password"><p>Password:</p>
+                                    <input type="password" id="password" value={password}
+                                           onChange={(e) => setPassword(e.target.value)}></input>
+                                </label>
 
-                            <Input
-                                id="username"
-                                label="Voer hier je gebruikersnaam in:"
-                                type="text"
-                                value={username}
-                                onChange={e => setUsername(e.target.value)}
-                                placeholder="Gebruikersnaam"
-                                required
-                            />
-
-                            <Input
-                                id="password"
-                                label="Voer hier je wachtwoord in om in te loggen:"
-                                type="password"
-                                value={password}
-                                onChange={e => setPassword(e.target.value)}
-                                placeholder="Voer hier je wachtwoord in"
-                                required
-                            />
-
-                            <button type="submit">Inloggen</button>
+                                {(username === "" || password === "") && <> <Button disabled = {true} size="small" text="Submit"/>
+                                    <>not all required fields filled in</>
+                                </>}
+                                {!(username === "" || password === "") && <Button size="small" type="submit" value="Submit" text="Submit"/>}
+                                {error && <div className="error-text">Something went wrong! Try again.</div>}
                         </form>
+                        }
                         <p>Heb je nog geen account? <Link to="/register">Registreer</Link> je dan eerst.</p>
                     </div>
-                </div>
             </section>
         </>
     );
 }
 
 export default Login;
+

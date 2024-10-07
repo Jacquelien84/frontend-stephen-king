@@ -1,22 +1,58 @@
 import './Navigation.css'
-import {Link, useNavigate} from 'react-router-dom';
-import Button from "../button/Button.jsx";
-import sk from '../../assets/stephen-king-logo.jpg';
+import {NavLink, useNavigate} from 'react-router-dom';
+import SK from '../../assets/stephen-king-logo.jpg';
+import {AuthContext} from "../../Context/AuthContext";
+import {useContext} from "react";
 
 function Navigation() {
     const navigate = useNavigate();
+    const {logout, loggedIn} = useContext(AuthContext);
+
+    const navigateToHome = () => {
+        navigate('/');
+    };
+
+    const handleLogout = () => {
+        logout();  // Roep de logout-functie aan vanuit de AuthContext
+        navigate('/login');  // Navigeer naar de login-pagina of homepagina na logout
+    };
 
     return(
         <nav className="main-navigation outer-content-container">
             <div className="inner-nav-container">
-                <Button type="botton" variant="invisible" onClick={() => navigate('/')}>
-                    <img className="img" src={sk} alt="Logo that links to home page" />
-                </Button>
-                <ul className="main-navigation-links">
-                    <li><Link to="/">Home</Link></li>
-                    <li><Link to="/book">Boeken</Link></li>
-                    <li><Link to="/login">Login</Link></li>
-                    <li><Link to="/contact">Contact</Link></li>
+
+                <img onClick={navigateToHome} className="img" src={SK} alt="Logo" />
+
+                <ul className="NavUser">
+                    <li>
+                        <NavLink to="/">Home</NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/book">Boeken</NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/news">Vers van de pers</NavLink>
+                    </li>
+                    {!loggedIn && (
+                        <li>
+                            <NavLink to="/register">Registreren</NavLink>
+                        </li>
+                    )}
+                    {!loggedIn && (
+                        <li>
+                            <NavLink to="/login">Login</NavLink>
+                        </li>
+                    )}
+
+                    {loggedIn && <>
+                        <li>
+                            <NavLink to="/profile">Profile</NavLink>
+                        </li>
+                        <li>
+                            <NavLink onClick={handleLogout} to="/">Logout</NavLink> {/* Logout aanroepen op click */}
+                        </li>
+                    </>
+                    }
                 </ul>
             </div>
         </nav>

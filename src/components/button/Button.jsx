@@ -1,11 +1,10 @@
 import './Button.css';
 
-function Button({ type, children, onClick, disabled = false, variant }) {
-    return (
-        <button type={type} disabled={disabled} onClick={onClick} className={variant === 'primary' ? 'button button-primary' : 'button button-invisible'}>
-            {children}
-        </button>
-    );
+function Button({disabled, size, text, onclick, type, value, icon}) {
+    return (<>
+        <button className={size} disabled={disabled} onClick={onclick} value={value} type={type}> {(icon != null) &&
+            <div className="button-icon">{icon}</div>} <p>{text}</p></button>
+    </>)
 }
 
 export default Button;

@@ -1,111 +1,210 @@
 import { createContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode'; // Corrigeer de import zonder accolades
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+import React from "react";
 
-export const AuthContext = createContext( {} );
+export const AuthContext = createContext({});
 
-// eslint-disable-next-line react/prop-types
-function AuthContextProvider( { children } ) {
-    const [ isAuth, toggleIsAuth ] = useState( {
-        isAuth: false,
-        user: null,
+function AuthContextProvider({ children }) {
+
+    const [isAuth, setAuth] = useState({
+        loggedIn: false,
+        user: {
+            username: "",
+            role: "",
+            favourites: [],
+        },
         status: 'pending',
-    } );
+    });
+
     const navigate = useNavigate();
 
-    // MOUNTING EFFECT
-    useEffect( () => {
-        // haal de JWT op uit Local Storage
-        const token = localStorage.getItem( 'token' );
+    useEffect(() => {
+        async function checkCred() {
+            const token = localStorage.getItem("token");
 
-        // als er WEL een token is, haal dan opnieuw de gebruikersdata op
-        if ( token ) {
-            const decoded = jwtDecode( token );
-            void fetchUserData( decoded.sub, token );
-        } else {
-            // als er GEEN token is doen we niks, en zetten we de status op 'done'
-            toggleIsAuth( {
-                isAuth: false,
-                user: null,
-                status: 'done',
-            } );
+            if (token && token !== "null") {
+                if (isTokenExpired(token)) {
+                    logout(); // Log the user out if the token is expired
+                } else {
+                    try {
+                        const decoded = jwtDecode(token);
+                        if (decoded.sub) {
+                            await fetchUserData(decoded.sub, token);
+                        }
+                    } catch (error) {
+                        console.error("Error decoding token:", error);
+                        logout(); // Log out on error
+                    }
+                }
+            } else {
+                setAuth({
+                    loggedIn: false,
+                    user: { username: "", role: "", favourites: [] },
+                    status: 'done',
+                });
+            }
         }
-    }, [] );
 
-    const login = ( JWT ) => {
-        // zet de token in de Local Storage
-        localStorage.setItem( 'token', JWT );
-        // decode de token zodat we de ID van de gebruiker hebben en data kunnen ophalen voor de context
-        const decoded = jwtDecode( JWT );
+        checkCred();
+    }, []);
 
-        // geef de ID, token en redirect-link mee aan de fetchUserData functie (staat hieronder)
-        void fetchUserData( decoded.sub, JWT, '/' );
+// Function to check if token is expired
+    function isTokenExpired(token) {
+        const decoded = jwtDecode(token);
+        return decoded.exp * 1000 < Date.now(); // Expiry time in ms
+    }
+
+    async function login(JWT, redirectToProfile = true) {
+        localStorage.setItem("token", JWT);
+
+        if (JWT) {
+            try {
+                const decoded = jwtDecode(JWT);
+                await fetchUserData(decoded.sub, JWT);
+                if (redirectToProfile) navigateToProfile(); // Conditional redirection
+            } catch (error) {
+                console.error("Error logging in:", error);
+                logout(); // Log out on error
+            }
+        }
     }
 
     function logout() {
         localStorage.clear();
-        toggleIsAuth( {
-            isAuth: false,
-            user: null,
+        setAuth({
+            loggedIn: false,
+            user: { username: "", role: "", favourites: [] },
             status: 'done',
-        } );
+        });
 
-        console.log( 'Gebruiker is uitgelogd!' );
-        navigate( '/' );
+        console.log('User has been logged out!');
+        navigate('/'); // Redirect to homepage after logout
     }
+    useEffect(() => {
+        const token = localStorage.getItem('token');
 
-    // Omdat we deze functie in login- en het mounting-effect gebruiken, staat hij hier gedeclareerd!
-    async function fetchUserData( id, token, redirectUrl ) {
+        if (token && token !== "null") {
+            try {
+                const decoded = jwtDecode(token);
+                if (decoded.sub) {
+                    fetchUserData(decoded.sub, token);
+                }
+            } catch (error) {
+                console.error("Error decoding token:", error);
+            }
+        } else {
+            setAuth({
+                loggedIn: false,
+                user: {
+                    username: "",
+                    role: "",
+                    favourites: [],
+                },
+                status: 'done',
+            });
+        }
+    }, []);
+
+    async function fetchUserData(id, token) {
         try {
-            // haal gebruikersdata op met de token en id van de gebruiker
-            const result = await axios.get( `http://localhost:8080/users/${ id }`, {
+            const result = await axios.get(`http://localhost:8080/users/${id}`, {
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${ token }`,
+                    Authorization: `Bearer ${token}`,
                 },
-            } );
+            });
 
-            // zet de gegevens in de state
-            toggleIsAuth( {
-                ...isAuth,
-                isAuth: true,
+            localStorage.setItem("user_username", result.data.username);
+            localStorage.setItem("user_role", result.data.role);
+            localStorage.setItem("loggedin", "true");
+
+            setAuth({
+                loggedIn: true,
                 user: {
                     username: result.data.username,
-                    email: result.data.email,
-                    id: result.data.id,
+                    role: result.data.role,
+                    favourites: result.data.favourites || [], // Haal de favorieten op
+                },
+                status: "done",
+            });
+        } catch (error) {
+            console.log("Error occurred collecting user data:", error);
+            setAuth({
+                loggedIn: false,
+                user: {
+                    username: "",
+                    role: "",
+                    favourites: [],
                 },
                 status: 'done',
-            } );
-
-            // als er een redirect URL is meegegeven (bij het mount-effect doen we dit niet) linken we hiernnaartoe door
-            // als we de history.push in de login-functie zouden zetten, linken we al door voor de gebuiker is opgehaald!
-            if ( redirectUrl ) {
-                navigate( redirectUrl );
-            }
-
-        } catch ( e ) {
-            console.error( e );
-            // ging er iets mis? Plaatsen we geen data in de state
-            toggleIsAuth( {
-                isAuth: false,
-                user: null,
-                status: 'done',
-            } );
+            });
         }
     }
 
+    const addFavourite = async (bookId) => {
+        try {
+            const response = await axios.put(
+                `http://localhost:8080/users/fav/${isAuth.user.username}/${bookId}`,
+                {},
+                { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
+            );
+            setAuth((prevAuth) => ({
+                ...prevAuth,
+                user: {
+                    ...prevAuth.user,
+                    favourites: [...prevAuth.user.favourites, response.data], // Voeg het boek toe aan de favorietenlijst
+                },
+            }));
+        } catch (error) {
+            console.error("Error adding to favourites:", error);
+        }
+    };
+
+    const removeFavourite = async (bookId) => {
+        try {
+            await axios.delete(
+                `http://localhost:8080/users/fav/${isAuth.user.username}/${bookId}`,
+                { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
+            );
+            setAuth((prevAuth) => ({
+                ...prevAuth,
+                user: {
+                    ...prevAuth.user,
+                    favourites: prevAuth.user.favourites.filter((fav) => fav.id !== bookId), // Verwijder het boek uit de favorieten
+                },
+            }));
+        } catch (error) {
+            console.error("Error removing from favourites:", error);
+        }
+    };
+
+    const navigateToProfile = () => {
+        navigate('/profile');
+    };
+
     const contextData = {
-        ...isAuth,
-        login,
-        logout,
+        isAuth: isAuth,
+        login: login,
+        logout: logout,
+        loggedIn: isAuth.loggedIn,
+        user: isAuth.user,
+        favourites: isAuth.user.favourites, // Directe toegang tot de favorieten
+        addFavourite: addFavourite,
+        removeFavourite: removeFavourite,
+        fetchUserData: fetchUserData,
     };
 
     return (
-        <AuthContext.Provider value={ contextData }>
-            { isAuth.status === 'done' ? children : <p>Loading...</p> }
+        <AuthContext.Provider value={contextData}>
+            {(isAuth.status === 'done') && children}
+            {(isAuth.status === 'pending') && <p>Loading...</p>}
         </AuthContext.Provider>
     );
 }
 
 export default AuthContextProvider;
+
+
+

@@ -1,105 +1,146 @@
 import './Register.css';
-import {useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
+import React from "react";
+import Button from "../../components/button/Button.jsx";
+import {FaShieldCat} from "react-icons/fa6";
+import {PiUserCircleCheck} from "react-icons/pi";
+import {FaUserPlus} from "react-icons/fa";
 
-import Input from "../../components/input/Input.jsx";
+
 
 function Register() {
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [error, setError] = React.useState(null);
+    const [addedSuccess, toggleAddedSuccess] = React.useState(false);
+    const [role, setRole] = React.useState("");
+    const [password, setPassword] = React.useState("");
+    const [username, setUsername] = React.useState("");
 
-    const [error, setError] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+    const [email, setEmail] = React.useState("");
     const navigate = useNavigate();
 
-    const validateForm = () => {
-        if (!username || !email || !password) {
-            setError('Alle velden zijn verplicht');
-            return false;
-        }
-        if (password.length < 6) {
-            setError('Wachtwoord moet minstens 6 karakters lang zijn');
-            return false;
-        }
-        return true;
-    }
 
-    const handleSubmit = async (e) => {
+
+    async function addUser(e) {
         e.preventDefault();
-        setError('');
-
-        if (!validateForm()) return;
-
-        setIsLoading(true);
+        toggleAddedSuccess(false);
+        setError(null);
 
         try {
-            const response = await axios.post('/users/register', {
-                username, email, password });
-            console.log('Registration successful:', response.data);
-            navigate('/login');
-        } catch (error) {
-            console.error('Registration failed:', error);
-            if (error.response) {
-                setError(error.response.data.message || 'Registratie mislukt. Probeer het opnieuw.');
-            } else {
-                setError('Er is een fout opgetreden. Probeer het opnieuw.');
-            }
-        } finally {
-            setIsLoading(false);
-        }
-    };
+            const response = await axios.post('http://localhost:8080/register', {
+                username: username,
+                email: email,
+                password: password,
+                role: role,
+            });
 
+            const token = response.data.access_token;
+            localStorage.setItem("token", token);
+
+            toggleAddedSuccess(true);
+        } catch (error) {
+            setError(error);
+        }
+    }
 
     return (
         <>
-            <section className="login outer-content-container">
-                <div className="inner-content-container">
-                    <h1>Registreer je hier:</h1>
-                    <form onSubmit={handleSubmit}>
-                        {error && <div className="error-message">{error}</div>}
+            <section className="register-content">
+                <div className="container-column">
+                    {!addedSuccess && <div className="info-text">
+                        <h1>Sign up!</h1>
+                    </div>}
+                    {addedSuccess &&
+                        <div className="successfully-added"><PiUserCircleCheck className="user-added-icon"/>
+                            <h4>Account created successfully! You can now</h4>
+                            <Link
+                                to="login"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    navigate("/login");
+                                }}
+                            >
+                                <h3>log in </h3>
+                            </Link>
+                        </div>}
 
-                        <Input
-                            id="username"
-                            label="Voer hier je gebruikersnaam in:"
-                            type="text"
-                            value={username}
-                            onChange={e => setUsername(e.target.value)}
-                            placeholder="Gebruikersnaam"
-                            required
-                        />
+                    {!addedSuccess &&
+                        <form onSubmit={addUser}>
+                            <div className="input-container">
+                                <div className="input-block-row">
+                                    <label htmlFor="username"><p>Username:</p>
+                                        <input type="text" id="username" value={username}
+                                               onChange={(e) => setUsername(e.target.value)}></input>
+                                        {!username && <p><em>required field</em></p>}
+                                        {username && <p><em></em></p>}
+                                    </label>
+                                    <label htmlFor="email"><p>Email:</p>
+                                        <input type="text" id="email" value={email}
+                                               onChange={(e) => setEmail(e.target.value)}></input>
+                                        {!email && <p><em>required field</em></p>}
+                                        {email && <p><em></em></p>}
+                                    </label>
+                                    <label htmlFor="password"><p>Password:</p>
+                                        <input type="password" id="password" value={password}
+                                               onChange={(e) => setPassword(e.target.value)}></input>
+                                        {!password && <p><em>required field</em></p>}
+                                        {password && <p><em></em></p>}
+                                    </label>
+                                </div>
+                            </div>
+                            <p>As a:</p>
 
+                            <div className="container-row">
+                                <div className="radio-container">
+                                    <input type="radio" id="user" value="User" checked={role === "USER"}
+                                           className="user"
+                                           onChange={() => setRole("USER")}/>
+                                    <label htmlFor="user">
+                                        <div className="status">
+                                            {(role === "USER") &&
+                                                <div className="on"><p>User</p> <FaUserPlus className="radio-symbol"/>
+                                                </div>}
+                                            {!(role === "USER") &&
+                                                <div className="off"><p>User</p> <FaUserPlus className="radio-symbol"/>
+                                                </div>}
+                                        </div>
+                                    </label>
 
-                        <Input
-                            type="email"
-                            label="Voer hier je e-mailadres in:"
-                            id="email"
-                            placeholder="Emailadres"
-                            value={email}
-                            onChange={e => setEmail(e.target.value)}
-                            required
-                        />
+                                    <input type="radio" id="admin" value="Admin" checked={role === "ADMIN"}
+                                           className="admin"
+                                           onChange={() => setRole("ADMIN")}/>
+                                    <label htmlFor="admin">
+                                        <div className="status">
+                                            {(role === "ADMIN") &&
+                                                <div className="on"><p>Admin</p> <FaShieldCat className="radio-symbol"/>
+                                                </div>}
+                                            {!(role === "ADMIN") &&
+                                                <div className="off"><p>Admin</p> <FaShieldCat
+                                                    className="radio-symbol"/></div>}
+                                        </div>
+                                    </label>
+                                </div>
+                                {!role && <p><em>required field</em></p>}
+                            </div>
+                            {(role === "ADMIN") &&
+                                <p>Once submitted, our existing admins will contact you to approve or reject your
+                                    application asap.</p>}
 
-                        <Input
-                            id="password"
-                            label="Voer je wachtwoord in::"
-                            type="password"
-                            value={password}
-                            onChange={e => setPassword(e.target.value)}
-                            placeholder="Voer hier je wachtwoord in"
-                            required
-                        />
-                        {error && <p className="error">Dit account bestaat al. Probeer een ander emailadres.</p>}
-                        <button type="submit" disabled={isLoading}>
-                            {isLoading ? 'Bezig met registreren...' : 'Registreer'}
-                        </button>
-                    </form>
+                            {(username === "" || password === "" || role === "") && <> <Button disabled={true}
+                                                                                               size="medium"
+                                                                                               text="Submit"/>
+                                Not all required fields have been filled in
+                            </>}
+                            {!(username === "" || password === "" || role === "") &&
+                                <Button size="medium" type="submit" value="Submit" text="Submit"/>}
+                            {error && <>⚠️ {error}</>}
+                        </form>
+                    }
                 </div>
-                <p>Heb je al een account? <Link to="/login">Log</Link> je dan hier in.</p>
             </section>
         </>
     );
 }
 
 export default Register;
+
