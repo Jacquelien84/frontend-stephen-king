@@ -1,7 +1,6 @@
 import './BookCard.css'
 import React from 'react';
 
-
 const BookCard = ({ book, onClick }) => {
 
     return (
@@ -10,7 +9,7 @@ const BookCard = ({ book, onClick }) => {
                 src={`http://localhost:8080/books/${book.id}/bookcovers`}
                 alt={book.title}
                 onError={(e) => {
-                    e.target.src = 'https://via.placeholder.com/150'; // Fallback afbeelding
+                    e.target.src = 'https://via.placeholder.com/150';
                     console.log("Error loading image");
                 }}
             />

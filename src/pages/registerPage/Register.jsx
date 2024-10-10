@@ -1,6 +1,6 @@
 import './Register.css';
 import { Link, useNavigate } from "react-router-dom";
-import axios from 'axios';
+import api from "../../services/api.js";
 import React from "react";
 import Button from "../../components/button/Button.jsx";
 import {FaShieldCat} from "react-icons/fa6";
@@ -27,7 +27,7 @@ function Register() {
         setError(null);
 
         try {
-            const response = await axios.post('http://localhost:8080/register', {
+            const response = await api.post('/register', {
                 username: username,
                 email: email,
                 password: password,

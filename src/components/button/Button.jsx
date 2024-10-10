@@ -1,8 +1,8 @@
 import './Button.css';
 
-function Button({disabled, size, text, onclick, type, value, icon}) {
+function Button({disabled, size, text, onClick, type, value, icon}) {
     return (<>
-        <button className={size} disabled={disabled} onClick={onclick} value={value} type={type}> {(icon != null) &&
+        <button className={size} disabled={disabled} onClick={onClick} value={value} type={type}> {(icon != null) &&
             <div className="button-icon">{icon}</div>} <p>{text}</p></button>
     </>)
 }

@@ -1,7 +1,7 @@
 import './Login.css';
 import {Link, useNavigate} from "react-router-dom";
 import React, {useContext, useEffect, useState} from "react";
-import axios from "axios";
+import api from "../../services/api.js";
 import { AuthContext } from "../../context/AuthContext.jsx";
 import Button from "../../components/button/Button.jsx";
 
@@ -29,7 +29,7 @@ function Login() {
         toggleError(false);
 
         try {
-            const result = await axios.post(`http://localhost:8080/login`, {
+            const result = await api.post(`/login`, {
                 username: username,
                 password: password,
             });

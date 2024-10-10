@@ -1,0 +1,25 @@
+.post-detail-section .blog-post {
+    border: 2px solid #8B0000;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.blog-post h2 {
+    margin-top: 0;
+    padding-bottom: 20px;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+}
+
+.blog-post p {
+    font-size: 1em;
+    color: #555;
+}
+
+.blog-post small {
+    font-size: 0.875em;
+    color: #999;
+}

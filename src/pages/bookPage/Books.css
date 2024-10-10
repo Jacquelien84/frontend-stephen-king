@@ -4,8 +4,13 @@
 
 .search-sort-controls {
     display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+    text-align: center;
     gap: 10px;
     margin-bottom: 20px;
+
 }
 
 .books-grid {
@@ -17,7 +22,6 @@
 .book-card {
     background-color: #f4f4f4;
     cursor: pointer;
-    /*border-radius: 5px;*/
     transition: background-color 0.3s;
 }
 

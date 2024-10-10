@@ -1,23 +1,20 @@
 .book-card {
     display: flex;
-    flex-direction: column;  /* Zorgt ervoor dat de titel en de afbeelding onder elkaar staan */
-    align-items: center;     /* Centreert de afbeelding en de tekst horizontaal */
-    justify-content: center; /* Centreert de inhoud verticaal als er meer hoogte is */
-    text-align: center;      /* Zorgt ervoor dat de tekst ook gecentreerd wordt */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    width: 200px;            /* Stel een breedte in voor het blok */
-    height: 200px;           /* Stel een hoogte in voor het blok */
+    width: 200px;
+    height: 200px;
     margin: 10px;
 }
 
 .book-card img {
-    max-width: 100%;         /* Zorgt ervoor dat de afbeelding niet groter is dan het blok */
+    max-width: 100%;
     height: auto;
-    object-fit: cover;       /* Zorgt ervoor dat de afbeelding netjes geschaald wordt */
+    object-fit: cover;
 }
 
-.book-title .faved-icon {
-    fill: yellow;
-}

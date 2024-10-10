@@ -13,8 +13,8 @@ function Navigation() {
     };
 
     const handleLogout = () => {
-        logout();  // Roep de logout-functie aan vanuit de AuthContext
-        navigate('/login');  // Navigeer naar de login-pagina of homepagina na logout
+        logout();
+        navigate('/login');
     };
 
     return(
@@ -49,7 +49,7 @@ function Navigation() {
                             <NavLink to="/profile">Profile</NavLink>
                         </li>
                         <li>
-                            <NavLink onClick={handleLogout} to="/">Logout</NavLink> {/* Logout aanroepen op click */}
+                            <NavLink onClick={handleLogout} to="/">Logout</NavLink>
                         </li>
                     </>
                     }
