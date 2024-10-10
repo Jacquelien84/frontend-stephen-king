@@ -1,13 +1,13 @@
 import './Books.css';
-import React, {useState, useEffect, useContext} from 'react';
-import axios from "axios";
+import React, {useState, useEffect} from 'react';
+import api from "../../services/api.js";
 import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import BookCard from '../../components/bookCard/BookCard.jsx';
-import {BookContext} from "../../context/BookContext.jsx";  // Importeer het nieuwe component
+import Button from "../../components/button/Button.jsx";
+
 
 function Books() {
-    const {bookData} = useContext(BookContext);
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(false);
     const [searchValue, setSearchValue] = useState('');
@@ -18,16 +18,14 @@ function Books() {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
-    // Haal boeken op bij het laden van de component
     useEffect(() => {
         fetchBooks();
     }, [sortBy, sortOrder]);
 
-    // Functie om een specifiek boek op te halen en weer te geven in de modal
     const fetchBookDetails = async (bookId) => {
         setLoading(true);
         try {
-            const response = await axios.get(`http://localhost:8080/books/${bookId}`);
+            const response = await api.get(`/books/${bookId}`);
             setSelectedBook(response.data);
         } catch (error) {
             console.error('Error fetching book details:', error);
@@ -37,11 +35,10 @@ function Books() {
         }
     };
 
-    // Functie om boeken op te halen
     const fetchBooks = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`http://localhost:8080/books?sortBy=${sortBy}&sortOrder=${sortOrder}`);
+            const response = await api.get(`/books?sortBy=${sortBy}&sortOrder=${sortOrder}`);
             setBooks(Array.isArray(response.data) ? response.data : []);
             console.log(response.data);
         } catch (error) {
@@ -53,11 +50,10 @@ function Books() {
         }
     };
 
-    // Functie om op boeknaam te zoeken
     const fetchBookByName = async (title) => {
         setLoading(true);
         try {
-            const response = await axios.get(`http://localhost:8080/books/title/${title}`);
+            const response = await api.get(`/books/title/${title}`);
             setSearchResults([response.data]);
         } catch (error) {
             console.error('Error fetching book:', error);
@@ -67,32 +63,30 @@ function Books() {
         }
     };
 
-    // Navigeren naar boekdetails pagina
     const navigateToBook = (id) => {
         navigate(`/books/${id}`);
     }
 
     return (
         <div className="book-list-container">
-            {/* Zoekbalk en sorteeropties */}
             <div className="search-sort-controls">
                 <FaSearch id="search-icon"/>
-                <input
-                    type="text"
+                <textarea
                     placeholder="Search..."
+                    rows="1"
+                    cols="30"
                     value={searchValue}
                     onChange={(e) => setSearchValue(e.target.value)}
                 />
-                <button onClick={() => {
+                <Button size="small" text="Zoeken" onClick={() => {
                     if (!searchValue.trim()) {
                         alert("Please enter a valid book title to search.");
                         return;
                     }
                     fetchBookByName(searchValue);
-                }}>Search</button>
+                }}></Button>
             </div>
 
-            {/* Boekenlijst */}
             <div className="books-grid">
                 {loading ? (
                     <div>Loading...</div>
@@ -105,11 +99,10 @@ function Books() {
                         <BookCard key={book.id} book={book} onClick={() => fetchBookDetails(book.id)}/>
                     ))
                 ) : (
-                    <div>No books found.</div>
+                    <div>Geen boeken gevonden.</div>
                 )}
             </div>
 
-            {/* Boekgegevens na klikken cover */}
             {selectedBook && (
                 <div className="modal-overlay" onClick={() => setSelectedBook(null)}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -123,17 +116,16 @@ function Books() {
                             }}
                         />
                         <p><strong>Beschrijving:</strong> {selectedBook.description}</p>
-                        <button onClick={() => navigateToBook(selectedBook.id)}>Details</button>
-                        <button onClick={() => setSelectedBook(null)}>Close</button>
+                        <Button size="small" text="Details" onClick={() => navigateToBook(selectedBook.id)} />
+                        <Button size="small" text="Sluit" onClick={() => setSelectedBook(null)} />
                     </div>
                 </div>
             )}
 
-            {/* Foutmelding */}
-            {error && <p className="error-message">Something went wrong: {error.message}</p>}
+            {error && <p className="error-message">Er ging iets mis: {error.message}</p>}
         </div>
     );
-};
+}
 
 export default Books;
 

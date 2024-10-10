@@ -1,96 +1,75 @@
 import React, { useContext, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext.jsx";
-import { BookContext } from "../../context/BookContext.jsx";
-import axios from "axios";
+import api from "../../services/api.js";
 import { IoHeart } from "react-icons/io5";
 import "./BookDetails.css";
 import StarRating from "../../components/starRating/StarRating.jsx";
+import Button from "../../components/button/Button.jsx";
 
 function BookDetails() {
+    const { loggedIn } = useContext(AuthContext);
     const { id } = useParams();
-    const { bookData } = useContext(BookContext);
-    const { loggedIn, user, fetchUserData } = useContext(AuthContext);
+    const [books, setBooks] = useState([]);
+    const { user } = useContext(AuthContext);
     const [localBook, setLocalBook] = useState(null);
     const [warning, setWarning] = useState("");
-    const [faved, toggleFaved] = useState(false);
-    const [status, setStatus] = useState("starting")
+    const [isFavorite, setIsFavorite] = useState(false);
+    const [isRead, setIsRead] = useState(false);
 
     useEffect(() => {
-        // Check if bookData and books array exist before accessing them
-        if (bookData && bookData.books.length > 0) {
-            const foundBook = bookData.books.find((book) => book.id.toString() === id);
+        fetchBooks();
+    }, [id]);
 
+    async function fetchBooks() {
+        try {
+            const response = await api.get('/books');
+            setBooks(response.data);
+
+            const foundBook = response.data.find((book) => book.id === parseInt(id));
             if (foundBook) {
                 setLocalBook(foundBook);
-
-                // Check if the book is in the user's favourites
-                if (user && foundBook.favourites && foundBook.favourites.some((fav) => fav.username === user.username)) {
-                    toggleFaved(true);
-                }
             } else {
-                setLocalBook(null);
+                setWarning("Boek niet gevonden.");
             }
-        }
-    }, [bookData, id, user]);
-
-    async function AddToFavourites() {
-        if (loggedIn) {
-            const token = localStorage.getItem("token");
-            const username = localStorage.getItem("user_username");
-
-            if (!token || !username) {
-                setWarning("Token or username not found.");
-                return;
-            }
-
-            try {
-                await axios.put(`http://localhost:8080/users/fav/${username}/${id}`, {}, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-                toggleFaved(true);
-                fetchUserData(user.username, token);
-            } catch (e) {
-                console.error("Error adding to favourites:", e);
-            }
-        } else {
-            setWarning("You have to be logged in to add books to your favourites.");
+        } catch (e) {
+            console.error(e);
         }
     }
 
-
-    async function RemoveFromFavourites() {
-        if (loggedIn) {
-            const username = localStorage.getItem("user_username"); // Store username for reuse
-
-            try {
-                await axios.delete(`http://localhost:8080/users/fav/${username}/${id}`, {
-                    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-                });
-                toggleFaved(false);
-                fetchUserData(user.username, localStorage.getItem("token"));
-            } catch (e) {
-                console.error("Error removing from favourites:", e);
-            }
+    async function deleteBook(id) {
+        try {
+            await api.delete(`/books/${id}`);
+            window.alert("Boek is verwijderd");
+            fetchBooks();
+        } catch (e) {
+            console.error(e);
         }
     }
 
-    if (status === "starting") {
-        setStatus("loading");
-        for (let i = 0; i < bookData.books.length; i++) {
-            let externalId = bookData.books[i].id;
+    useEffect(() => {
+        const savedFavorite = localStorage.getItem(`favorite_${id}`);
+        const savedRead = localStorage.getItem(`read_${id}`);
 
-            if (externalId.toString() === id.toString()) {
-                setLocalBook(bookData.books[i])
-                for (let f = 0; f < bookData.books[i].favourites.length; f++) {
-                    if (user && bookData.books[i].favourites[f].username === user.username) {
-                        toggleFaved(true);
-                    }
-                }
-            }
+        if (savedFavorite) {
+            setIsFavorite(JSON.parse(savedFavorite));
         }
-        setStatus("done");
-    }
+        if (savedRead) {
+            setIsRead(JSON.parse(savedRead));
+        }
+    }, [id]);
+
+    const toggleFavorite = () => {
+        const newFavoriteStatus = !isFavorite;
+        setIsFavorite(newFavoriteStatus);
+        localStorage.setItem(`favorite_${id}`, JSON.stringify(newFavoriteStatus));
+    };
+
+    const toggleRead = () => {
+        const newReadStatus = !isRead;
+        setIsRead(newReadStatus);
+        localStorage.setItem(`read_${id}`, JSON.stringify(newReadStatus));
+    };
 
     return (
         <>
@@ -101,37 +80,53 @@ function BookDetails() {
                             src={`http://localhost:8080/books/${localBook.id}/bookcovers`}
                             alt={localBook.title}
                             onError={(e) => {
-                                e.target.src = 'https://via.placeholder.com/150'; // Fallback afbeelding
+                                e.target.src = `https://via.placeholder.com/150?text=${encodeURIComponent(localBook.title || 'No Image')}`;
                                 console.log("Error loading image");
                             }}
                         />
                         <div className="text-book">
-                            <h2>
-                                {localBook.title}
-                                {faved ? (
-                                    <IoHeart className="faved-icon" onClick={RemoveFromFavourites}/>
-                                ) : (
-                                    <IoHeart className="fav-icon" onClick={AddToFavourites}/>
-                                )}
+                            <h2>{localBook.title}
+                            {isFavorite ? (
+                                <IoHeart className="faved-icon" onClick={toggleFavorite} />
+                            ) : (
+                                <IoHeart className="fav-icon" onClick={toggleFavorite} />
+                            )}
                             </h2>
-                            <hr/>
+                            <hr />
                             <p><strong>Schrijver:</strong> {localBook.author}</p>
-                            <p><strong>Originele Title:</strong> {localBook.originalTitle}</p>
+                            <p><strong>Originele Titel:</strong> {localBook.originalTitle}</p>
                             <p><strong>Released:</strong> {localBook.released}</p>
                             <p><strong>Verfilmd:</strong> {localBook.movieAdaptation}</p>
                             <p><strong>Beschrijving:</strong> {localBook.description}</p>
-                            <StarRating id={localBook.id}/>
+                            {loggedIn && (
+                                <>
+                            <div className="rating-read-container">
+                                <StarRating id={localBook.id} />
+                                <Button
+                                        className={`read ${isRead ? 'read-active' : ''}`}
+                                        size="medium"
+                                        text={isRead ? "Markeer als niet gelezen" : "Markeer als gelezen"}
+                                        onClick={toggleRead}
+                            /></div>
+                                </>
+                            )}
+
+                            {user && user.role === "ADMIN" && (
+                                <Button size="small" text="Verwijder" onClick={() => deleteBook(localBook.id)} />
+                            )}
+
                         </div>
                     </div>
                 </section>
             ) : (
-                <p>Loading book details...</p>
+                books.length > 0 && <p>{warning || "Boek niet gevonden"}</p>
             )}
-            {(!localBook && bookData.books.length > 0) && <p>Book not found</p>}
-            {warning && <p>{warning}</p>}
         </>
     );
 }
 
 export default BookDetails;
+
+
+
 

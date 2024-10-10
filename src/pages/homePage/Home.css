@@ -8,21 +8,20 @@
 
 .header-text {
     display: flex;
-    flex-direction: row; /* Zorg ervoor dat items naast elkaar staan */
-    align-items: center; /* Zorg dat ze verticaal gecentreerd zijn */
+    flex-direction: row;
+    align-items: center;
 }
 
 .stephenking {
     padding: 10px;
     height: 350px;
-    flex-shrink: 0; /* Voorkom dat de afbeelding krimpt */
+    flex-shrink: 0;
 }
 
 h3 {
-    margin-left: 20px; /* Voeg wat ruimte toe tussen de afbeelding en de tekst */
+    margin-left: 20px;
 }
 
-/* Brede inner container*/
 .inner-content-container {
     flex-basis: 1400px;
     flex-shrink: 1;
@@ -30,7 +29,6 @@ h3 {
     align-items: center;
 }
 
-/* Smalle inner container voor tekst etc. */
 .inner-content-container__text-restriction {
     flex-basis: 1000px;
     flex-shrink: 1;

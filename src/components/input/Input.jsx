@@ -1,19 +1,18 @@
 import React from "react";
 
-function InputElement({type, name, label, id, placeholder, onChange}) {
+function InputElement({name, label, id, cols, rows, value, onChange}) {
     return (
-        <>
-            <label htmlFor={id}>
-                {label}
-                <input
-                    type={type}
-                    id={id}
-                    placeholder={placeholder}
-                    name={name}
-                    onChange={onChange}
-                />
-            </label>
-        </>
+        <div>
+            <label htmlFor={id}>{label}</label>
+            <textarea
+                name={name}
+                id={id}
+                cols={cols}
+                rows={rows}
+                value={value}
+                onChange={onChange}
+            />
+        </div>
     );
 }
 

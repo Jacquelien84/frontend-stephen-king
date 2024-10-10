@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import './UploadNewBook.css';
+import React, { useState, useEffect } from 'react';
+import api from "../../services/api.js";
+import { useNavigate } from 'react-router-dom';
+import InputElement from '../../components/input/Input.jsx';
+import Button from '../../components/button/Button.jsx';
 
 function UploadNewBook() {
     const [id, setId] = useState('');
@@ -11,29 +14,24 @@ function UploadNewBook() {
     const [movieAdaptation, setMovieAdaptation] = useState('');
     const [description, setDescription] = useState('');
 
-    // For book cover upload
     const [image, setImage] = useState(null);
     const [previewUrlPhoto, setPreviewUrlPhoto] = useState('');
 
-    // For navigation and loading
     const [loading, setLoading] = useState(false);
-    const [status, setStatus] = useState('Authorized');  // Default status
-    const navigate = useNavigate();  // Navigation hooks
+    const [status, setStatus] = useState('Authorized');
+    const navigate = useNavigate();
 
     useEffect(() => {
         return () => {
-            // Cleanup van de URL om geheugenlekken te voorkomen
+
             if (previewUrlPhoto) {
                 URL.revokeObjectURL(previewUrlPhoto);
             }
         };
     }, [previewUrlPhoto]);
 
-    // Handle book cover image change
     function handleImageChange(e) {
         const uploadedImage = e.target.files[0];
-
-        // Controleer of er een bestand is geselecteerd en of dit een afbeelding is
         if (uploadedImage && uploadedImage.type.startsWith('image/')) {
             setImage(uploadedImage);
             setPreviewUrlPhoto(URL.createObjectURL(uploadedImage));
@@ -48,15 +46,14 @@ function UploadNewBook() {
 
         const token = localStorage.getItem('token');
         if (!token) {
-            console.error("You must be logged in to add a book.");
+            console.error("Je moet ingelogd zijn om een boek toe te voegen.");
             setStatus('Login');
             setLoading(false);
             return;
         }
 
-        // Step 1: Submit book data first
         try {
-            const bookResponse = await axios.post('http://localhost:8080/books', {
+            const bookResponse = await api.post('/books', {
                 id,
                 title,
                 author,
@@ -71,30 +68,29 @@ function UploadNewBook() {
                 }
             });
 
-            console.log("Book added successfully", bookResponse.data);
+            console.log("Boek succesvol toegevoegd", bookResponse.data);
             const addedBookId = bookResponse.data.id;
 
-            // Step 2: If book is added successfully, upload the cover
             if (image && addedBookId) {
                 const formData = new FormData();
                 formData.append("file", image);
 
                 try {
-                    const uploadResponse = await axios.post(`http://localhost:8080/books/${addedBookId}/bookcovers`, formData, {
+                    const uploadResponse = await api.post(`/books/${addedBookId}/bookcovers`, formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data',
                             Authorization: `Bearer ${token}`,
                         }
                     });
-                    console.log("Book cover uploaded successfully", uploadResponse.data);
+                    console.log("Boekomslag succesvol geüpload", uploadResponse.data);
                 } catch (uploadError) {
-                    console.error("Error uploading book cover", uploadError);
+                    console.error("Fout bij het uploaden van de boekomslag", uploadError);
                 }
             }
 
             setStatus("Done");
         } catch (error) {
-            console.log("Error adding book:", error);
+            console.log("Fout bij het toevoegen van het boek:", error);
             setStatus("Error");
         } finally {
             setLoading(false);
@@ -103,103 +99,96 @@ function UploadNewBook() {
 
     return (
         <div className="container-row">
-            {status === "Done" && <h3>Book and cover added successfully!</h3>}
+            {status === "Done" && <h3>Boek en omslag succesvol toegevoegd!</h3>}
 
             {status === "Login" && (
                 <div className="error">
-                    <h4>You have to be logged in to upload books.</h4>
+                    <h4>Je moet ingelogd zijn om boeken toe te voegen.</h4>
                     <button onClick={() => navigate('/login')}>Log in</button>
                 </div>
             )}
 
             {status === "NotAdmin" && (
                 <div className="error">
-                    <h4>You have to be an admin to upload books.</h4>
+                    <h4>Je moet een admin zijn om boeken toe te voegen.</h4>
                 </div>
             )}
 
             {(!loading && status === "Authorized") && (
                 <div className="container-column">
-                    <h3>Add New Book</h3>
+                    <h3>Nieuw Boek Toevoegen</h3>
                     <form onSubmit={addBook}>
                         <div className="input-container">
 
-                            <label htmlFor="book-id">
-                                Id:
-                                <input
-                                    type="text"
-                                    name="book-id-field"
-                                    id="book-id"
-                                    value={id}
-                                    onChange={(e) => setId(e.target.value)}
-                                />
-                            </label>
+                            <InputElement
+                                name="book-id-field"
+                                label="Id:"
+                                id="book-id"
+                                cols="30"
+                                rows="1"
+                                value={id}
+                                onChange={(e) => setId(e.target.value)}
+                            />
 
-                            <label htmlFor="title">
-                                Title:
-                                <input
-                                    type="text"
-                                    name="title-field"
-                                    id="title"
-                                    value={title}
-                                    onChange={(e) => setTitle(e.target.value)}
-                                />
-                            </label>
+                            <InputElement
+                                name="title-field"
+                                label="Title:"
+                                id="title"
+                                cols="30"
+                                rows="1"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                            />
 
-                            <label htmlFor="author">
-                                Author:
-                                <input
-                                    type="text"
-                                    name="author-field"
-                                    id="author"
-                                    value={author}
-                                    onChange={(e) => setAuthor(e.target.value)}
-                                />
-                            </label>
+                            <InputElement
+                                name="author-field"
+                                label="Author:"
+                                id="author"
+                                cols="30"
+                                rows="1"
+                                value={author}
+                                onChange={(e) => setAuthor(e.target.value)}
+                            />
 
-                            <label htmlFor="original-title">
-                                Original Title:
-                                <input
-                                    type="text"
-                                    name="original-title-field"
-                                    id="original-title"
-                                    value={originalTitle}
-                                    onChange={(e) => setOriginalTitle(e.target.value)}
-                                />
-                            </label>
+                            <InputElement
+                                name="original-title-field"
+                                label="Original Title:"
+                                id="original-title"
+                                cols="30"
+                                rows="1"
+                                value={originalTitle}
+                                onChange={(e) => setOriginalTitle(e.target.value)}
+                            />
 
-                            <label htmlFor="released">
-                                Released:
-                                <input
-                                    type="text"
-                                    name="released-field"
-                                    id="released"
-                                    value={released}
-                                    onChange={(e) => setReleased(e.target.value)}
-                                />
-                            </label>
+                            <InputElement
+                                name="released-field"
+                                label="Released:"
+                                id="released"
+                                cols="30"
+                                rows="1"
+                                value={released}
+                                onChange={(e) => setReleased(e.target.value)}
+                            />
 
-                            <label htmlFor="movie-adaptation">
-                                Movie Adaptation:
-                                <input
-                                    type="text"
-                                    name="movie-adaptation-field"
-                                    id="movieAdaptation"
-                                    value={movieAdaptation}
-                                    onChange={(e) => setMovieAdaptation(e.target.value)}
-                                />
-                            </label>
+                            <InputElement
+                                name="movie-adaptation-field"
+                                label="Movie Adaptation:"
+                                id="movieAdaptation"
+                                cols="30"
+                                rows="1"
+                                value={movieAdaptation}
+                                onChange={(e) => setMovieAdaptation(e.target.value)}
+                            />
 
-                            <label htmlFor="description">
-                                Description:
-                                <input
-                                    type="text"
-                                    name="description-field"
-                                    id="description"
-                                    value={description}
-                                    onChange={(e) => setDescription(e.target.value)}
-                                />
-                            </label>
+                            <InputElement
+                                name="description-field"
+                                label="Beschrijving:"
+                                id="description"
+                                cols="30"
+                                rows="10"
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                            />
 
                             <label htmlFor="bookcover">
                                 Book Cover:
@@ -222,7 +211,11 @@ function UploadNewBook() {
                                 </label>
                             )}
 
-                            <button type="submit">Add Book</button>
+                            <Button
+                                size="small"
+                                text={"Add Book"}
+                                type="submit"
+                            />
                         </div>
                     </form>
                 </div>

@@ -4,16 +4,18 @@ button {
     align-items: center;
     justify-content: center;
     text-align: center;
-    box-shadow: rgba(100, 100, 111, 0.2) 0 -5px 0 inset, rgba(100, 100, 111, 0.2) 0 5px 10px 0;;
+    box-shadow: rgba(100, 100, 111, 0.2) 0 -5px 0 inset, rgba(100, 100, 111, 0.2) 0 5px 10px 0;
     border: none;
     border-radius: 10px;
     margin: 10px;
     background-color: rgba(139, 0, 0, 0.5);
 }
-button p {
+
+button span {
     margin-top: 10px;
     font-weight: 300;
 }
+
 button .button-icon {
     font-size: 100px;
     margin-top: 10px;
@@ -23,26 +25,33 @@ button:disabled {
     background-color: #E6DBAC;
     color: white;
 }
+
 button:disabled:hover {
     background-color: #E6DBAC;
     color: white;
 }
+
 button:hover {
     box-shadow: rgba(100, 100, 111, 0.2) 0 -2px 0 inset;
     background-color: #B22222;
 }
-button:hover p {
+
+button:hover span {
     margin-top: 15px;
 }
+
 button:hover .button-icon {
     margin-top: 15px;
 }
+
 button:active {
     box-shadow: rgba(100, 100, 111, 0.2) 0 3px 7px inset;
 }
-button:active p {
+
+button:active span {
     margin-top: 17px;
 }
+
 button:active .button-icon {
     margin-top: 18px;
 }
@@ -50,26 +59,33 @@ button:active .button-icon {
 .small .button-icon {
     font-size: 30px;
 }
+
 .small {
-    height: 50px;
+    height: 30px;
     width: 100px;
 }
-.small p {
+
+.small span {
     margin-top: 5px;
     font-weight: 500;
 }
-.small:hover p {
+
+.small:hover span {
     margin-top: 10px;
 }
-.small:active p {
-    margin-top: 12px
+
+.small:active span {
+    margin-top: 12px;
 }
+
 .small .button-icon {
     margin-top: 5px;
 }
+
 .small:hover .button-icon {
     margin-top: 10px;
 }
+
 .small:active .button-icon {
     margin-top: 12px;
 }
@@ -78,52 +94,9 @@ button:active .button-icon {
     height: 50px;
     width: 200px;
 }
-.medium p {
+
+.medium span {
     font-weight: 500;
 }
 
-.medium-large {
-    height: 100px;
-    width: 300px;
-    color: var(--darkpurple);
-}
-.medium-large .button-icon {
-    font-size: 50px;
-    padding: 25px;
-}
-.medium-large p {
-    font-weight: 500;
-    padding: 25px 25px 25px 0;
-}
 
-.large {
-    height: 200px;
-    width: 200px;
-    flex-direction: column;
-    box-shadow: rgba(20, 20, 20, 0.2) 0 -10px 0 inset, rgba(100, 100, 111, 0.2) 0 5px 10px 0;;
-    font-size: 18px;
-    background-color: var(--lightpurple);
-}
-.large:hover {
-    box-shadow: rgba(100, 100, 111, 0.2) 0 -5px 0 inset, rgba(100, 100, 111, 0.2) 0 5px 10px 0;;
-}
-.large .button-icon {
-    font-size: 100px;
-    height: 100px;
-    width: 100px;
-}
-.large:hover .button-icon {
-    margin-top: 10px;
-}
-.large:hover p {
-    margin-top: 10px;
-}
-.large:active .button-icon {
-    margin-top: 17px;
-}
-.large:active {
-    box-shadow: rgba(100, 100, 111, 0.2) 0 3px 15px inset;
-}
-.large:active p {
-    margin-top: 10px;
-}
