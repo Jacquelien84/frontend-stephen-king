@@ -1,11 +1,12 @@
+import "./BookDetails.css";
 import React, { useContext, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext.jsx";
 import api from "../../services/api.js";
 import { IoHeart } from "react-icons/io5";
-import "./BookDetails.css";
 import StarRating from "../../components/starRating/StarRating.jsx";
 import Button from "../../components/button/Button.jsx";
+import {updateLocalStorageList} from "../../helpers/FavoriteAndReadOption.js";
 
 function BookDetails() {
     const { loggedIn } = useContext(AuthContext);
@@ -16,6 +17,9 @@ function BookDetails() {
     const [warning, setWarning] = useState("");
     const [isFavorite, setIsFavorite] = useState(false);
     const [isRead, setIsRead] = useState(false);
+    const [favoritesList, setFavoritesList] = useState([]);
+    const [readList, setReadList] = useState([]);
+
 
     useEffect(() => {
         fetchBooks();
@@ -48,26 +52,34 @@ function BookDetails() {
     }
 
     useEffect(() => {
-        const savedFavorite = localStorage.getItem(`favorite_${id}`);
-        const savedRead = localStorage.getItem(`read_${id}`);
+        const savedFavorite = JSON.parse(localStorage.getItem(`favorite_${id}`)) || false;
+        const savedRead = JSON.parse(localStorage.getItem(`read_${id}`)) || false;
+        const savedFavoritesList = JSON.parse(localStorage.getItem("favoritesList")) || [];
+        const savedReadList = JSON.parse(localStorage.getItem("readList")) || [];
 
-        if (savedFavorite) {
-            setIsFavorite(JSON.parse(savedFavorite));
-        }
-        if (savedRead) {
-            setIsRead(JSON.parse(savedRead));
-        }
+        setIsFavorite(savedFavorite);
+        setIsRead(savedRead);
+        setFavoritesList(savedFavoritesList);
+        setReadList(savedReadList);
     }, [id]);
 
     const toggleFavorite = () => {
         const newFavoriteStatus = !isFavorite;
         setIsFavorite(newFavoriteStatus);
+
+        const updatedFavoritesList = updateLocalStorageList(id, "favoritesList", newFavoriteStatus);
+        setFavoritesList(updatedFavoritesList);
+
         localStorage.setItem(`favorite_${id}`, JSON.stringify(newFavoriteStatus));
     };
 
     const toggleRead = () => {
         const newReadStatus = !isRead;
         setIsRead(newReadStatus);
+
+        const updatedReadList = updateLocalStorageList(id, "readList", newReadStatus);
+        setReadList(updatedReadList);
+
         localStorage.setItem(`read_${id}`, JSON.stringify(newReadStatus));
     };
 
@@ -103,6 +115,7 @@ function BookDetails() {
                             <div className="rating-read-container">
                                 <StarRating id={localBook.id} />
                                 <Button
+                                        type="button"
                                         className={`read ${isRead ? 'read-active' : ''}`}
                                         size="medium"
                                         text={isRead ? "Markeer als niet gelezen" : "Markeer als gelezen"}
