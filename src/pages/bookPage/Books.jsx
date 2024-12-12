@@ -78,7 +78,7 @@ function Books() {
                     value={searchValue}
                     onChange={(e) => setSearchValue(e.target.value)}
                 />
-                <Button size="small" text="Zoeken" onClick={() => {
+                <Button type="button" size="small" text="Zoeken" onClick={() => {
                     if (!searchValue.trim()) {
                         alert("Please enter a valid book title to search.");
                         return;
@@ -116,8 +116,8 @@ function Books() {
                             }}
                         />
                         <p><strong>Beschrijving:</strong> {selectedBook.description}</p>
-                        <Button size="small" text="Details" onClick={() => navigateToBook(selectedBook.id)} />
-                        <Button size="small" text="Sluit" onClick={() => setSelectedBook(null)} />
+                        <Button type="button" size="small" text="Details" onClick={() => navigateToBook(selectedBook.id)} />
+                        <Button type="button" size="small" text="Sluit" onClick={() => setSelectedBook(null)} />
                     </div>
                 </div>
             )}
