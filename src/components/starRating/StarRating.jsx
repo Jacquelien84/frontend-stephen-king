@@ -21,7 +21,7 @@ function StarRating({ id }) {
     };
 
     return (
-        <div className="star-rating">
+        <main className="star-rating">
             {[...Array(5)].map((star, i) => {
                 const ratingValue = i + 1;
 
@@ -44,7 +44,7 @@ function StarRating({ id }) {
                     </label>
                 );
             })}
-        </div>
+        </main>
     );
 }
 

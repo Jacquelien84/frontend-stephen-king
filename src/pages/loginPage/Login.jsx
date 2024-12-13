@@ -44,8 +44,8 @@ function Login() {
 
     return (
         <>
-            <section className="login-content">
-                    <div className="inner-content-container">
+            <main className="login-content">
+                    <section className="inner-content-container">
                         <h1>Login</h1>
                         {!(loggedIn) &&
                             <form onSubmit={logIn}>
@@ -66,8 +66,8 @@ function Login() {
                         </form>
                         }
                         <p>Heb je nog geen account? <Link to="/register">Registreer</Link> je dan eerst.</p>
-                    </div>
-            </section>
+                    </section>
+            </main>
         </>
     );
 }

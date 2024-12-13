@@ -4,7 +4,7 @@ import formatDate from '../../helpers/formatData.js';
 
 const BlogPostList = ({ posts }) => {
     return (
-        <div>
+        <main>
             <h3>Blog Posts</h3>
             {posts.length === 0 ? (
                 <p>No posts yet.</p>
@@ -17,7 +17,7 @@ const BlogPostList = ({ posts }) => {
                     </div>
                 ))
             )}
-        </div>
+        </main>
     );
 };
 

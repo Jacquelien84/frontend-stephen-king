@@ -13,7 +13,7 @@
     color: #8B0000;
 }
 
-.inner-nav-container {
+.outer-content-container {
     flex-basis: 1400px;
     flex-grow: 0;
     display: flex;
@@ -22,7 +22,6 @@
     justify-content: space-around;
     align-items: center;
 }
-
 
 .img {
     height: 200px;

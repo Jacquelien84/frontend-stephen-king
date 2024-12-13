@@ -6,9 +6,9 @@ function Home() {
 
     return (
         <>
-            <section className="section outer-content-container">
-                <div className="inner-content-container">
-                    <div className="header-text">
+            <main className="section outer-content-container">
+                <section className="inner-content-container">
+                    <header className="header-text">
                         <img className="stephenking" src={stephenking} alt="Foto van Stepehen King"/>
                         <h3>Stephen Edwin King (Portland, Maine, 21 september 1947) is een Amerikaans schrijver van
                             onder
@@ -22,7 +22,7 @@ function Home() {
                             titels The Shawshank Redemption en The Green Mile. Ook The Stand werd na de uitgave van de
                             onverkorte versie verfilmd tot een miniserie (met Gary Sinise en Molly Ringwald in de
                             hoofdrollen).</h3>
-                    </div>
+                    </header>
 
                     <article className="article1">
                         <h4>Biografie</h4>
@@ -147,8 +147,8 @@ function Home() {
                             verplicht om elke dag minstens 6 pagina's te schrijven.<br/>
                         </p>
                     </article>
-                </div>
-            </section>
+                </section>
+            </main>
         </>
     );
 }

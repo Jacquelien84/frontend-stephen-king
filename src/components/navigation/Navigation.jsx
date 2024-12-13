@@ -19,10 +19,9 @@ function Navigation() {
 
     return(
         <nav className="main-navigation outer-content-container">
-            <div className="inner-nav-container">
-
+            <span className="inner-nav-container">
                 <img onClick={navigateToHome} className="img" src={SK} alt="Logo" />
-
+            </span>
                 <ul className="NavUser">
                     <li>
                         <NavLink to="/">Home</NavLink>
@@ -53,7 +52,6 @@ function Navigation() {
                     </>
                     }
                 </ul>
-            </div>
         </nav>
     )
 }
