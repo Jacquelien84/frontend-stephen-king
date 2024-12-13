@@ -66,8 +66,8 @@ function Books() {
     }
 
     return (
-        <div className="book-list-container">
-            <div className="search-sort-controls">
+        <main className="book-list-container">
+            <section className="search-sort-controls">
                 <FaSearch id="search-icon"/>
                 <textarea
                     placeholder="Search..."
@@ -83,7 +83,7 @@ function Books() {
                     }
                     fetchBookByName(searchValue);
                 }}></Button>
-            </div>
+            </section>
 
             <div className="books-grid">
                 {loading ? (
@@ -102,7 +102,7 @@ function Books() {
             </div>
 
             {selectedBook && (
-                <div className="modal-overlay" onClick={() => setSelectedBook(null)}>
+                <section className="modal-overlay" onClick={() => setSelectedBook(null)}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                         <h2>{selectedBook.title}</h2>
                         <img
@@ -116,11 +116,11 @@ function Books() {
                         <Button type="button" size="small" text="Details" onClick={() => navigateToBook(selectedBook.id)} />
                         <Button type="button" size="small" text="Sluit" onClick={() => setSelectedBook(null)} />
                     </div>
-                </div>
+                </section>
             )}
 
             {error && <p className="error-message">Er ging iets mis: {error.message}</p>}
-        </div>
+        </main>
     );
 }
 

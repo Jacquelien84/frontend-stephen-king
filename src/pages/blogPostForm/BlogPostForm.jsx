@@ -6,7 +6,6 @@ const BlogPostForm = ({ onAddPost }) => {
     const [title, setTitle] = useState('');
     const [tekst, setTekst] = useState('');
 
-
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -24,10 +23,8 @@ const BlogPostForm = ({ onAddPost }) => {
 
     return (
         <>
-            <section className="form-content">
-                <div className="form-container">
-                </div>
-                <div className="form-container-column">
+            <main className="form-content">
+                <section className="form-container-column">
                     <form onSubmit={handleSubmit}>
 
                             <label htmlFor="title"></label>
@@ -58,8 +55,8 @@ const BlogPostForm = ({ onAddPost }) => {
                             type="submit"
                         />
                     </form>
-                </div>
-            </section>
+                </section>
+            </main>
         </>
     );
 }

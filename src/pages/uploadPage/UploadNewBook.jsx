@@ -93,7 +93,7 @@ function UploadNewBook() {
     }
 
     return (
-        <div className="container-row">
+        <main className="container-row">
             {status === "Done" && <h3>Boek en omslag succesvol toegevoegd!</h3>}
 
             {status === "Login" && (
@@ -217,7 +217,7 @@ function UploadNewBook() {
             )}
 
             {loading && <p>Loading...</p>}
-        </div>
+        </main>
     );
 }
 

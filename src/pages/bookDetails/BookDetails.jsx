@@ -85,8 +85,8 @@ function BookDetails() {
     return (
         <>
             {localBook ? (
-                <section className="inner-content-container">
-                    <div className="img-book">
+                <main className="inner-content-container">
+                    <span className="img-book">
                         <img
                             src={`http://localhost:8080/books/${localBook.id}/bookcovers`}
                             alt={localBook.title}
@@ -95,7 +95,7 @@ function BookDetails() {
                                 console.log("Error loading image");
                             }}
                         />
-                        <div className="text-book">
+                        <article className="text-book">
                             <h2>{localBook.title}
                             {isFavorite ? (
                                 <IoHeart className="faved-icon" onClick={toggleFavorite} />
@@ -111,7 +111,7 @@ function BookDetails() {
                             <p><strong>Beschrijving:</strong> {localBook.description}</p>
                             {loggedIn && (
                                 <>
-                            <div className="rating-read-container">
+                            <article className="rating-read-container">
                                 <StarRating id={localBook.id} />
                                 <Button
                                         type="button"
@@ -119,17 +119,15 @@ function BookDetails() {
                                         size="medium"
                                         text={isRead ? "Markeer als niet gelezen" : "Markeer als gelezen"}
                                         onClick={toggleRead}
-                            /></div>
+                            /></article>
                                 </>
                             )}
-
                             {user && user.role === "ADMIN" && (
                                 <Button size="small" text="Verwijder" onClick={() => deleteBook(localBook.id)} />
                             )}
-
-                        </div>
-                    </div>
-                </section>
+                        </article>
+                    </span>
+                </main>
             ) : (
                 books.length > 0 && <p>{warning || "Boek niet gevonden"}</p>
             )}

@@ -40,13 +40,13 @@ function Register() {
 
     return (
         <>
-            <section className="register-content">
-                <div className="container-column">
+            <main className="register-content">
+                <section className="container-column">
                     {!addedSuccess && <div className="info-text">
                         <h1>Sign up!</h1>
                     </div>}
                     {addedSuccess &&
-                        <div className="successfully-added"><PiUserCircleCheck className="user-added-icon"/>
+                        <section className="successfully-added"><PiUserCircleCheck className="user-added-icon"/>
                             <h4>Account created successfully! You can now</h4>
                             <Link
                                 to="login"
@@ -57,7 +57,7 @@ function Register() {
                             >
                                 <h3>log in </h3>
                             </Link>
-                        </div>}
+                        </section>}
 
                     {!addedSuccess &&
                         <form onSubmit={addUser}>
@@ -131,8 +131,8 @@ function Register() {
                             {error && <>⚠️ {error}</>}
                         </form>
                     }
-                </div>
-            </section>
+                </section>
+            </main>
         </>
     );
 }

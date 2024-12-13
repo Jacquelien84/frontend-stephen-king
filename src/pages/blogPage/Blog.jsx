@@ -25,15 +25,15 @@ const Blog = () => {
 
     return (
         <>
-            <section className="post-detail-section">
-                <div className="new-blog-content-container"></div>
+            <main className="post-detail-section">
+                <section className="new-blog-content-container"></section>
                 <h1>Vers van de pers</h1>
                 {(loggedIn) && <>
                     {user.role === "ADMIN" && <>
                         <BlogPostForm onAddPost={addPost}/> </>}
                 </>}
                 <BlogPostList posts={posts}/>
-            </section>
+            </main>
         </>
     );
 };
