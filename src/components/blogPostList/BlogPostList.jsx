@@ -1,6 +1,6 @@
 import './BlogPostList.css';
 import React from 'react';
-import formatDate from '../../helpers/formatData.js';  // Import de formatDate helper
+import formatDate from '../../helpers/formatData.js';
 
 const BlogPostList = ({ posts }) => {
     return (

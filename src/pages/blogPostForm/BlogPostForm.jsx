@@ -29,6 +29,7 @@ const BlogPostForm = ({ onAddPost }) => {
                 </div>
                 <div className="form-container-column">
                     <form onSubmit={handleSubmit}>
+
                             <label htmlFor="title"></label>
                             Title:
                             <textarea
@@ -59,11 +60,8 @@ const BlogPostForm = ({ onAddPost }) => {
                     </form>
                 </div>
             </section>
-</>
-);
+        </>
+    );
 }
-
-
-
 
 export default BlogPostForm;

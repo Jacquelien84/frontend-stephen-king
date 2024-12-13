@@ -2,7 +2,6 @@ import './Home.css';
 import quote from '../../assets/Stephen_King_The_Shining_Quote.jpg'
 import stephenking from '../../assets/stephenking.jpg'
 
-
 function Home() {
 
     return (

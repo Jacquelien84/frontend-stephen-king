@@ -18,7 +18,6 @@ function Login() {
         }
     }, [loggedIn, navigate]);
 
-
     function handleChangeUsername(value) {
         toggleError(false);
         setUsername(value);
@@ -34,12 +33,11 @@ function Login() {
                 password: password,
             });
 
-            console.log(result.data);
             localStorage.setItem("token", result.data.access_token);
             let token = result.data.access_token;
             login(token);
         } catch(e) {
-            console.log(e.response);
+            console.error(e.response);
             toggleError(true);
         }
     }

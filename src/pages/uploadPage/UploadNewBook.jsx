@@ -13,17 +13,14 @@ function UploadNewBook() {
     const [released, setReleased] = useState('');
     const [movieAdaptation, setMovieAdaptation] = useState('');
     const [description, setDescription] = useState('');
-
     const [image, setImage] = useState(null);
     const [previewUrlPhoto, setPreviewUrlPhoto] = useState('');
-
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState('Authorized');
     const navigate = useNavigate();
 
     useEffect(() => {
         return () => {
-
             if (previewUrlPhoto) {
                 URL.revokeObjectURL(previewUrlPhoto);
             }
@@ -68,7 +65,6 @@ function UploadNewBook() {
                 }
             });
 
-            console.log("Boek succesvol toegevoegd", bookResponse.data);
             const addedBookId = bookResponse.data.id;
 
             if (image && addedBookId) {
@@ -82,15 +78,14 @@ function UploadNewBook() {
                             Authorization: `Bearer ${token}`,
                         }
                     });
-                    console.log("Boekomslag succesvol geüpload", uploadResponse.data);
+                    console.error("Boekomslag succesvol geüpload", uploadResponse.data);
                 } catch (uploadError) {
                     console.error("Fout bij het uploaden van de boekomslag", uploadError);
                 }
             }
-
             setStatus("Done");
         } catch (error) {
-            console.log("Fout bij het toevoegen van het boek:", error);
+            console.error("Fout bij het toevoegen van het boek:", error);
             setStatus("Error");
         } finally {
             setLoading(false);

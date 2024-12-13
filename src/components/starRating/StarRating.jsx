@@ -1,6 +1,5 @@
 import './StarRating.css';
 import React, { useState, useEffect } from 'react';
-import { FaStar } from 'react-icons/fa';
 import {Balloon} from "@phosphor-icons/react";
 
 function StarRating({ id }) {
@@ -33,7 +32,7 @@ function StarRating({ id }) {
                             name={`rating-${id}`}
                             value={ratingValue}
                             onClick={() => handleRatingClick(ratingValue)}
-                            style={{ display: 'none' }} // Verbergt de radio buttons
+                            style={{ display: 'none' }}
                         />
                         <Balloon
                             className="star"

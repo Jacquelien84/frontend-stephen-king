@@ -20,7 +20,6 @@ function BookDetails() {
     const [favoritesList, setFavoritesList] = useState([]);
     const [readList, setReadList] = useState([]);
 
-
     useEffect(() => {
         fetchBooks();
     }, [id]);

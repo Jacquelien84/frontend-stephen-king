@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import BookCard from '../../components/bookCard/BookCard.jsx';
 import Button from "../../components/button/Button.jsx";
 
-
 function Books() {
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -40,7 +39,6 @@ function Books() {
         try {
             const response = await api.get(`/books?sortBy=${sortBy}&sortOrder=${sortOrder}`);
             setBooks(Array.isArray(response.data) ? response.data : []);
-            console.log(response.data);
         } catch (error) {
             console.error('Error fetching books:', error);
             setError(error);
@@ -111,8 +109,7 @@ function Books() {
                             src={`http://localhost:8080/books/${selectedBook.id}/bookcovers`}
                             alt={selectedBook.title}
                             onError={(e) => {
-                                e.target.src = 'https://via.placeholder.com/150'; // Fallback afbeelding
-                                console.log("Error loading image");
+                                e.target.src = 'https://via.placeholder.com/150';
                             }}
                         />
                         <p><strong>Beschrijving:</strong> {selectedBook.description}</p>
