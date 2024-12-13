@@ -7,19 +7,14 @@ import {FaShieldCat} from "react-icons/fa6";
 import {PiUserCircleCheck} from "react-icons/pi";
 import {FaUserPlus} from "react-icons/fa";
 
-
-
 function Register() {
     const [error, setError] = React.useState(null);
     const [addedSuccess, toggleAddedSuccess] = React.useState(false);
     const [role, setRole] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [username, setUsername] = React.useState("");
-
     const [email, setEmail] = React.useState("");
     const navigate = useNavigate();
-
-
 
     async function addUser(e) {
         e.preventDefault();

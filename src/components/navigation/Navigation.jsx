@@ -43,7 +43,6 @@ function Navigation() {
                             <NavLink to="/login">Login</NavLink>
                         </li>
                     )}
-
                     {loggedIn && <>
                         <li>
                             <NavLink to="/profile">Profile</NavLink>

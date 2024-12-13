@@ -99,8 +99,7 @@ function AuthContextProvider({ children }) {
                 status: "done",
             });
         } catch (error) {
-            console.log("Error occurred collecting user data:", error);
-            logout();
+            logout(error);
         }
     }
 
